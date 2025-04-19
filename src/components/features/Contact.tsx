@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, Send } from 'lucide-react';
+import { Mail, Send } from 'lucide-react';
 
 export default function Contact() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,7 +29,7 @@ export default function Contact() {
     
     // Validate form
     if (!formData.name || !formData.email || !formData.message) {
-      setFormError('모든 필수 항목을 입력해주세요.');
+      setFormError('please fill in all required fields.');
       setIsSubmitting(false);
       return;
     }
@@ -36,20 +37,27 @@ export default function Contact() {
     // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setFormError('유효한 이메일 주소를 입력해주세요.');
+      setFormError('please enter a valid email address.');
       setIsSubmitting(false);
       return;
     }
     
     try {
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Success case
-      setIsSubmitted(true);
-      setFormData({ name: '', email: '', phone: '', message: '' });
+      if (formRef.current) {
+        // FormSubmit 서비스를 통한 제출
+        formRef.current.action = "https://formsubmit.co/musemoov@gmail.com";
+        formRef.current.method = "POST";
+        
+        // 폼 직접 제출
+        formRef.current.submit();
+        
+        // 제출 성공 처리
+        setIsSubmitted(true);
+        setFormData({ name: '', email: '', phone: '', message: '' });
+      }
     } catch (error) {
-      setFormError('메시지 전송에 실패했습니다. 다시 시도해주세요.');
+      console.error('Form submission error:', error);
+      setFormError('message send failed. please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -58,26 +66,34 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 100,
+            damping: 15
+          }}
+        >
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            className="text-4xl text-gray-900 md:text-5xl font-bold mb-6"
           >
             CONTACT ME
           </motion.h2>
           <motion.p
             className="text-gray-600 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1 }}
+            transition={{ 
+              delay: 0.2,
+              duration: 0.6
+            }}
           >
-            궁금한 점이 있으시거나 프로젝트에 대해 논의하고 싶으시다면 언제든지 연락해 주세요.
+            Got a question or a project in mind?
+            Feel free to reach out anytime — I'd love to hear from you.
           </motion.p>
-        </div>
+        </motion.div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* 왼쪽 연락처 정보 */}
@@ -94,13 +110,19 @@ export default function Contact() {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold mb-4">Let's Connect</h3>
-              <p className="text-gray-600">
-                Please fill out the form on this section to contact with me. Or call between 9:00 a.m. and 8:00 p.m. KST, Monday through Friday.
-              </p>
+              <h3 className="text-2xl text-gray-900 font-bold mb-4">Let's Connect</h3>
+              <motion.p
+                className="text-gray-600"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                Please fill out the form on this section to contact with me.
+              </motion.p>
             </motion.div>
             
-            <div className="space-y-8 mt-12">
+            <div className="space-y-8 mt-0">
               <motion.div 
                 className="flex items-start"
                 initial={{ opacity: 0, y: 20 }}
@@ -109,27 +131,11 @@ export default function Contact() {
                 viewport={{ once: true }}
               >
                 <div className="mr-6 bg-gray-100 p-3 rounded-full">
-                  <Phone size={24} className="text-[#c84545]" />
-                </div>
-                <div>
-                  <p className="text-gray-700 font-medium">Call me</p>
-                  <p className="text-xl font-bold">+1234 5678 9000</p>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className="flex items-start"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <div className="mr-6 bg-gray-100 p-3 rounded-full">
                   <Mail size={24} className="text-[#c84545]" />
                 </div>
                 <div>
                   <p className="text-gray-700 font-medium">Email</p>
-                  <p className="text-xl font-bold">hello@example.com</p>
+                  <p className="text-xl font-bold">musemoov@gmail.com</p>
                 </div>
               </motion.div>
             </div>
@@ -150,14 +156,20 @@ export default function Contact() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <h4 className="text-xl font-bold mb-2">감사합니다!</h4>
-                <p>메시지가 성공적으로 전송되었습니다. 곧 연락드리겠습니다.</p>
+                <h4 className="text-xl font-bold mb-2">Thank you!</h4>
+                <p>Your message has been sent successfully. I will contact you soon.</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                {/* FormSubmit에 필요한 숨겨진 필드들 */}
+                <input type="hidden" name="_subject" value={`new message from ${formData.name}`} />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_next" value="https://portfolio-lch.vercel.app/" />
+                <input type="hidden" name="_template" value="table" />
+                
                 <div>
                   <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-700">
-                    이름 <span className="text-[#c84545]">*</span>
+                    Name <span className="text-[#c84545]">*</span>
                   </label>
                   <input
                     type="text"
@@ -165,15 +177,15 @@ export default function Contact() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="홍길동"
-                    className="w-full px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none rounded-sm"
+                    placeholder="Your Name"
+                    className="w-full text-gray-700 px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none rounded-sm"
                     required
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
-                    이메일 <span className="text-[#c84545]">*</span>
+                    Email <span className="text-[#c84545]">*</span>
                   </label>
                   <input
                     type="email"
@@ -181,15 +193,15 @@ export default function Contact() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="example@email.com"
-                    className="w-full px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none rounded-sm"
+                    placeholder="Your Email"
+                    className="w-full text-gray-700 px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none rounded-sm"
                     required
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-700">
-                    전화번호
+                    Phone Number
                   </label>
                   <input
                     type="tel"
@@ -197,23 +209,23 @@ export default function Contact() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="010-1234-5678"
-                    className="w-full px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none rounded-sm"
+                    placeholder="Your Phone Number"
+                    className="w-full text-gray-700 px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none rounded-sm"
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-700">
-                    메시지 <span className="text-[#c84545]">*</span>
+                    Message <span className="text-[#c84545]">*</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="문의 내용을 입력해 주세요"
+                    placeholder="Write your message here..."
                     rows={6}
-                    className="w-full px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none resize-none rounded-sm"
+                    className="w-full text-gray-700 px-4 py-3 bg-gray-100 border-none focus:ring-1 focus:ring-gray-400 focus:outline-none resize-none rounded-sm"
                     required
                   ></textarea>
                 </div>
@@ -224,14 +236,46 @@ export default function Contact() {
                   </div>
                 )}
                 
-                <button
-                  type="submit"
-                  className="px-8 py-4 bg-black text-white hover:bg-gray-800 transition-colors inline-flex items-center"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? '제출 중...' : '메시지 보내기'}
-                  <Send size={18} className="ml-2" />
-                </button>
+                <div className="relative">
+                  {/* 호버 시 나타나는 분홍색 원 */}
+                  <div className="absolute -right-20 -top-20 w-64 h-64 bg-pink-200 rounded-full opacity-0 group-hover:opacity-70 transition-opacity duration-300 pointer-events-none"></div>
+                  
+                  <motion.button
+                    type="submit"
+                    className="relative px-8 py-4 bg-black text-white border border-transparent hover:bg-white hover:text-black hover:border-black transition-all inline-flex items-center cursor-pointer group z-10"
+                    disabled={isSubmitting}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    <motion.span>
+                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                    </motion.span>
+                    
+                    {/* 기본 화살표 아이콘 */}
+                    <motion.div 
+                      className="ml-2 group-hover:opacity-0 transition-opacity"
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <Send size={18} />
+                    </motion.div>
+                    
+                    {/* 호버 시 나타나는 종이비행기 아이콘 */}
+                    <motion.div 
+                      className="absolute right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      initial={{ rotate: -45 }}
+                      whileHover={{ rotate: 0 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 2L11 13" />
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+                      </svg>
+                    </motion.div>
+                  </motion.button>
+                </div>
               </form>
             )}
           </motion.div>

@@ -1,132 +1,250 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from "framer-motion";
+import { useState, useRef } from 'react';
+import { motion, useAnimation, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
 import { CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
+import { LayoutGroup } from "framer-motion";
 
 export default function Benefits() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const isTitleInView = useInView(titleRef, { once: false, margin: "-100px 0px" });
+  
+  // 스크롤 애니메이션을 위한 useScroll 훅 사용
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  
+  // 스크롤 진행도에 따른 변환 값
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.8, 1], [0.3, 1, 1, 0.3]);
   
   // Benefits 섹션 컨텐츠
-  const benefits = [
+  const services = [
     {
-      title: "Expertly Crafted Design",
-      description: "I deliver interfaces that are intuitive, aesthetic, and conversion-driven.",
-      icon: <CheckCircle2 size={24} />,
-      image: "/images/BENEFITS/expert_design.jpg", // 샘플 이미지 경로
-      category: "SINGLE IMAGE"
+      title: "Frontend Development",
+      description: "Interactive, scalable, and elegant web interfaces — built with precision.",
+      icon: "M"
     },
     {
-      title: "Modern Tech Stack Mastery",
-      description: "Built with the latest frameworks and best practices, your website runs smoothly, securely, and ready to scale.",
-      icon: <CheckCircle2 size={24} />,
-      image: "/images/portfolio/technology.jpg", // 샘플 이미지 경로
-      category: "YOUTUBE VIDEO"
+      title: "UI/UX Design",
+      description: "Intuitive designs that think like users and feel like brands.",
+      icon: "M"
     },
     {
-      title: "Responsive & Reliable Communication",
-      description: "Expect fast replies, clear timelines, and zero guesswork. I treat your project like it's my own.",
-      icon: <CheckCircle2 size={24} />,
-      image: "/images/portfolio/support.jpg", // 샘플 이미지 경로
-      category: "VIMEO VIDEO"
+      title: "Product Design",
+      description: "From concept to execution — building products that people remember.",
+      icon: "M"
     },
     {
-      title: "Strategy-Driven Solutions",
-      description: "Every line of code serves a purpose. I align every decision with your business goals.",
-      icon: <CheckCircle2 size={24} />,
-      image: "/images/portfolio/strategy.jpg", // 샘플 이미지 경로
-      category: "KEN BURNS SLIDESHOW"
+      title: "OpenAI API Integration",
+      description: "Bringing intelligent features to life — powered by AI.",
+      icon: "M"
     },
     {
-      title: "Flawless Integration",
-      description: "Whether it's APIs, CMS, or analytics — I ensure everything works together seamlessly and intelligently.",
-      icon: <CheckCircle2 size={24} />,
-      image: "/images/portfolio/integration.jpg", // 샘플 이미지 경로
-      category: "HERO SLIDESHOW - ZOOM/FADE"
+      title: "Vercel Deployment",
+      description: "Blazing-fast, automated deployments for modern web projects.",
+      icon: "M"
     },
     {
-      title: "Fully Responsive, Always Optimized",
-      description: "From mobile to desktop, your site will look pixel-perfect and load fast — everywhere.",
-      icon: <CheckCircle2 size={24} />,
-      image: "/images/portfolio/responsive.jpg", // 샘플 이미지 경로
-      category: "SELF-HOSTED HTML5 VIDEO"
-    },
+      title: "Responsive Design",
+      description: "Pixel-perfect layouts across all screens and devices.",
+      icon: "M"
+    }
   ];
+
+  // 컨테이너 애니메이션
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  // 아이템 애니메이션
+  const itemVariants = {
+    hidden: { opacity: 0, y: 100 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12
+      }
+    }
+  };
+
+  // 제목 애니메이션
+  const titleVariants = {
+    hidden: { opacity: 0, y: -50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  // 아이콘 애니메이션
+  const iconVariants = {
+    hidden: { scale: 0, rotate: -180 },
+    visible: { 
+      scale: 1, 
+      rotate: 0,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 20
+      }
+    },
+    hover: { 
+      scale: 1.1,
+      rotate: 10,
+      transition: { 
+        duration: 0.3,
+        yoyo: Infinity,
+        repeatDelay: 0.5
+      }
+    }
+  };
 
   return (
     <section 
       id="benefits" 
-      className="min-h-screen py-16 pb-24 relative bg-fixed bg-cover bg-center" 
-      style={{ backgroundImage: "url('/images/BENEFITS/backgroundImg.png')" }}
+      className="py-24 bg-white relative overflow-hidden"
+      ref={sectionRef}
     >
-      <div className="max-w-7xl mx-auto px-6 relative z-10 h-full flex flex-col">
-        <div className="text-center mb-16 pt-8">
+      <div className="max-w-7xl mx-auto px-6 relative">
+        {/* 제목 */}
+        <motion.div 
+          className="mb-20 text-center"
+          ref={titleRef}
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 100,
+            damping: 15
+          }}
+        >
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-4 text-white"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            className="text-4xl text-gray-900 md:text-5xl font-bold mb-6"
           >
-            Why Choose Me
+            WHAT I DO
           </motion.h2>
-          <motion.p 
-            className="text-gray-300 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            More than just a developer — I'm your creative partner.
-          </motion.p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-grow">
-          {benefits.map((benefit, index) => (
+        {/* 서비스 그리드 */}
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+        >
+          {services.map((service, index) => (
             <motion.div
               key={index}
-              className="group"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              data-hoverable="true"
+              variants={itemVariants}
+              custom={index}
+              whileHover={{ 
+                y: -15,
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                transition: { duration: 0.3 }
+              }}
+              className="border border-[#121b2a]/30 bg-black rounded-[10px] p-10 text-center flex flex-col items-center cursor-pointer"
+              onHoverStart={() => setHoveredIndex(index)}
+              onHoverEnd={() => setHoveredIndex(null)}
             >
-              {/* 흰색 카드 */}
-              <div className="bg-white h-full p-8 shadow-sm rounded-sm">
-                {/* 아이콘 */}
-                <div className="text-black mb-4">
-                  {benefit.icon}
-                </div>
-                
-                {/* 제목 */}
-                <h3 className="text-xl font-bold mb-3 text-black">{benefit.title}</h3>
-                
-                {/* 설명 */}
-                <p className="text-gray-700">{benefit.description}</p>
-              </div>
+              {/* 아이콘 */}
+              <motion.div 
+                className="mb-6 h-20 w-20 rounded-full border border-gray-600 flex items-center justify-center relative"
+                variants={iconVariants}
+                animate={hoveredIndex === index ? "hover" : "visible"}
+              >
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={hoveredIndex === index ? "#c84545" : "currentColor"} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className={hoveredIndex === index ? "text-[#c84545]" : "text-gray-400"}>
+                  {index === 0 && (
+                    <>
+                      <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </>
+                  )}
+                  {index === 1 && (
+                    <>
+                      <rect x="2" y="3" width="20" height="14" rx="2" />
+                      <line x1="8" y1="21" x2="16" y2="21" />
+                      <line x1="12" y1="17" x2="12" y2="21" />
+                      <path d="M6 8h.01M6 12h.01M6 16h.01M10 8h8M10 12h8M10 16h8" />
+                    </>
+                  )}
+                  {index === 2 && (
+                    <>
+                      <path d="M2 12.5C2 9.46 4.46 7 7.5 7H18c2.21 0 4 1.79 4 4s-1.79 4-4 4H9.5C8.12 15 7 13.88 7 12.5S8.12 10 9.5 10H17" />
+                      <circle cx="15" cy="12" r="1" />
+                      <path d="M9.5 10H17" />
+                      <path d="M9.5 15H18c2.21 0 4-1.79 4-4s-1.79-4-4-4H7.5" />
+                    </>
+                  )}
+                  {index === 3 && (
+                    <>
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M12 3c-1.602 0-3.064.632-4.142 1.658m-1.1 1.544C5.696 7.195 5 9.342 5 11c0 1.657.696 3.804 1.758 4.798m1.1 1.544C8.936 18.368 10.398 19 12 19c1.603 0 3.065-.632 4.142-1.658m1.1-1.544C18.304 14.805 19 12.658 19 11c0-1.657-.696-3.804-1.758-4.798m-1.1-1.544C15.064 3.632 13.602 3 12 3" />
+                      <path d="M8 16l.553-1.658A6.995 6.995 0 0 1 5 11c0-1.818.687-3.505 1.847-4.787" />
+                      <path d="M16 16l-.553-1.658A6.995 6.995 0 0 0 19 11c0-1.818-.687-3.505-1.847-4.787" />
+                    </>
+                  )}
+                  {index === 4 && (
+                    <>
+                      <path d="M12 2L2 19.5h20z" />
+                      <path d="M9 15l3-3 3 3" />
+                      <path d="M15 10l-3-3-3 3" />
+                    </>
+                  )}
+                  {index === 5 && (
+                    <>
+                      <rect x="2" y="4" width="20" height="12" rx="2" />
+                      <rect x="8" y="20" width="8" height="2" rx="1" />
+                      <path d="M12 16v4" />
+                      <path d="M6 12h12" />
+                      <path d="M6 8h12" />
+                    </>
+                  )}
+                </svg>
+              </motion.div>
+              
+              {/* 제목 */}
+              <motion.h3 
+                className={`text-xl font-medium mb-4 ${hoveredIndex === index ? "text-[#c84545]" : "text-white"}`}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                {service.title}
+              </motion.h3>
+              
+              {/* 설명 */}
+              <motion.p 
+                className={`text-sm ${hoveredIndex === index ? "text-[#c84545]/80" : "text-gray-400"}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 + index * 0.1 }}
+              >
+                {service.description}
+              </motion.p>
             </motion.div>
           ))}
-        </div>
-        
-        <motion.div 
-          className="text-center mt-14 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <p className="text-white mb-8">
-          Great things start with a conversation. Shall we begin?
-          </p>
-          <a 
-            href="#contact" 
-            className="inline-block px-8 py-4 bg-white text-black hover:bg-gray-200 transition-colors"
-          >
-            Get Started
-          </a>
         </motion.div>
+        
+    
       </div>
     </section>
   );

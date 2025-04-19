@@ -1,28 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  i18n: {
-    locales: ['en', 'ko'],
-    defaultLocale: 'ko',
-  },
+  /* config options here */
   eslint: {
-    // 빌드 시 ESLint 검사를 건너뜁니다.
+    // ESLint 오류로 인한 빌드 실패를 방지합니다
     ignoreDuringBuilds: true,
-  },
-  typescript: {
-    // 빌드 시 타입 체크를 건너뜁니다.
-    ignoreBuildErrors: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-    ],
   },
 };
 
