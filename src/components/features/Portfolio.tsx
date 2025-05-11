@@ -132,7 +132,7 @@ const youtubeItems = [
   },
   {
     id: 'y3',
-    title: 'Marketing Company AI Chatbot VIDEO',
+    title: 'Marketing company AI Chatbot VIDEO',
     videoId: 'hhUvK2BckrM',
     brightness: 0.8,
     url: 'https://youtu.be/hhUvK2BckrM?si=mIa0ekt1ZuUH_CsX',
