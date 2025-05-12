@@ -21,7 +21,7 @@ const portfolioItems = [
     title: 'Shopping Mall',
     category: 'E-commerce',
     image: '/images/portfolio/shopping_mall_main.png',
-    brightness: 0.3,
+    brightness: 0.5,
     url: 'https://shopping-mall-pink.vercel.app/',
   },
   {
@@ -37,7 +37,7 @@ const portfolioItems = [
     title: 'Shopping Mall',
     category: 'E-commerce',
     image: '/images/portfolio/shopping_mall_main.png',
-    brightness: 0.3,
+    brightness: 0.5,
     url: 'https://shopping-mall-pink.vercel.app/',
   },
   {
@@ -53,7 +53,7 @@ const portfolioItems = [
     title: 'Dragon Ball Portfolio',
     category: 'Game',
     image: '/images/portfolio/dragonball_main.png',
-    brightness: 0.4,
+    brightness: 0.9,
     url: 'https://changheelee-portfolio.vercel.app/',
   }
 ];
@@ -65,7 +65,7 @@ const copiedItems1 = [
     title: 'AI Email Generator',
     category: 'Web App',
     image: '/images/portfolio/ai-email-generator.png',
-    brightness: 0.3,
+    brightness: 0.4,
     url: 'https://ai-email-generator-chi.vercel.app/',
   },
   {
@@ -73,7 +73,7 @@ const copiedItems1 = [
     title: 'AI Invoice Generator',
     category: 'Web App',
     image: '/images/portfolio/ai-invoice-generator.png',
-    brightness: 0.3,
+    brightness: 0.4,
     url: 'https://ai-invoice-generator-beta.vercel.app/',
   },
   {
@@ -81,7 +81,7 @@ const copiedItems1 = [
     title: 'KPI Dashboard',
     category: 'Web App',
     image: '/images/portfolio/kpi-dashboard.png',
-    brightness: 0.3,
+    brightness: 0.4,
     url: 'https://kpi-dashboard-v6zv.vercel.app/',
   },
 ];
@@ -93,7 +93,7 @@ const copiedItems2 = [
     title: 'Practice Dashboard',
     category: 'Web App',
     image: '/images/portfolio/practice-dashboard.png',
-    brightness: 0.3,
+    brightness: 0.5,
     url: 'https://practice-dashboard-zeta.vercel.app/',
   },
   {
@@ -109,7 +109,7 @@ const copiedItems2 = [
     title: 'AI Marketing Company',
     category: 'Website',
     image: '/images/portfolio/marketing_company_main.png',
-    brightness: 0.7,
+    brightness: 0.9,
     url: 'https://marketing-homepage-delta.vercel.app/',
   },
 ];
@@ -120,22 +120,22 @@ const youtubeItems = [
     id: 'y1',
     title: 'My 1st Portfolio Video',
     videoId: 'uBkNvM3t1oQ',
-    brightness: 0.7,
+    brightness: 0.9,
     url: 'https://youtu.be/uBkNvM3t1oQ?si=2-vOJNioWzcznbl2',
   },
   {
     id: 'y2',
     title: 'AI Email Generator and AI Invoice Generator VIDEO',
-    videoId: 'EyYJoCqcylM',
-    brightness: 0.6,
-    url: 'https://youtu.be/EyYJoCqcylM?si=1y0U57kDEhJ0HJQR',
+    videoId: 'mrP1YH_3A6c',
+    brightness: 0.9,
+    url: 'https://youtu.be/mrP1YH_3A6c?si=6gtPNDVScDfcqQi1',
   },
   {
     id: 'y3',
     title: 'Marketing company AI Chatbot VIDEO',
-    videoId: 'hhUvK2BckrM',
-    brightness: 0.8,
-    url: 'https://youtu.be/hhUvK2BckrM?si=mIa0ekt1ZuUH_CsX',
+    videoId: 'XDd9U7Vrb-o',
+    brightness: 0.9,
+    url: 'https://youtu.be/XDd9U7Vrb-o?si=nubR1ak2P3atrbJA',
   },
 ];
 
